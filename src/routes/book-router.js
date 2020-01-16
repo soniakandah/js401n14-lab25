@@ -14,6 +14,7 @@ const allowCrossDomain = function(req, res, next) {
 router.use(allowCrossDomain);
 
 router.get('/books', auth, async (req, res, next) => {
+    console.log('auth user', req.user);
     if (req.user && req.user.can('read')) {
         let allBooks = await books.getFromField({});
         let filteredBooks = [];
