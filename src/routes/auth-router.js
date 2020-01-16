@@ -6,6 +6,12 @@ const router = express.Router();
 const Users = require('../models/users-model.js');
 const users = new Users();
 const auth = require('../middleware/auth.js');
+const allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*');
+    next();
+};
+router.use(allowCrossDomain);
 
 /**
  * @route POST /signup
@@ -15,15 +21,12 @@ const auth = require('../middleware/auth.js');
  * @returns {string} 200 - The Bearer token
  */
 router.post('/signup', async (req, res, next) => {
-    console.log(req);
-    console.log(req.body);
     try {
         let user = await users.create(req.body);
         let token = 'Bearer ' + user.generateToken();
 
         res.status(200).json({ token: token, role: user.role });
     } catch (e) {
-        console.log(e);
         next(e);
     }
 });

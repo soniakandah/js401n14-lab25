@@ -6,6 +6,12 @@ const router = express.Router();
 const Books = require('../models/books-model.js');
 const books = new Books();
 const auth = require('../middleware/auth.js');
+const allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*');
+    next();
+};
+router.use(allowCrossDomain);
 
 router.get('/books', auth, async (req, res, next) => {
     if (req.user && req.user.can('read')) {
